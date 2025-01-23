@@ -88,16 +88,16 @@ public class CouponService {
                 .id(dto.getId())
                 .code(dto.getCode())
                 .type(dto.getType())
-                .discount(dto.getDiscount())
-                .threshold(dto.getThreshold())
-                .description(dto.getDescription())
+                .discount(dto.getDiscount() != null ? dto.getDiscount() : 0.0)
+                .threshold(dto.getThreshold() != null ? dto.getThreshold() : 0.0)
+                .description(dto.getDescription() != null ? dto.getDescription() : "")
                 .active(dto.isActive())
-                .buyProductId(dto.getBuyProductId())
-                .buyQuantity(dto.getBuyQuantity())
-                .getProductId(dto.getGetProductId())
-                .getQuantity(dto.getGetQuantity())
-                .productId(dto.getProductId())
-                .minimumCartValue(dto.getMinimumCartValue())
+                .buyProductId(dto.getBuyProductId() != null ? dto.getBuyProductId() : "")
+                .buyQuantity(dto.getBuyQuantity() != null ? dto.getBuyQuantity() : 0)
+                .getProductId(dto.getGetProductId() != null ? dto.getGetProductId() : "")
+                .getQuantity(dto.getGetQuantity() != null ? dto.getGetQuantity() : 0)
+                .productId(dto.getProductId() != null ? dto.getProductId() : "")
+                .minimumCartValue(dto.getMinimumCartValue() != null ? dto.getMinimumCartValue() : 0.0)
                 .build();
     }
 
@@ -120,17 +120,18 @@ public class CouponService {
     }
 
     private void updateCouponFields(Coupon existing, CouponDTO updated) {
-        existing.setCode(updated.getCode());
-        existing.setType(updated.getType());
-        existing.setDiscount(updated.getDiscount());
-        existing.setThreshold(updated.getThreshold());
-        existing.setDescription(updated.getDescription());
+        existing.setCode(updated.getCode() != null ? updated.getCode() : existing.getCode());
+        existing.setType(updated.getType() != null ? updated.getType() : existing.getType());
+        existing.setDiscount(updated.getDiscount() != null ? updated.getDiscount() : existing.getDiscount());
+        existing.setThreshold(updated.getThreshold() != null ? updated.getThreshold() : existing.getThreshold());
+        existing.setDescription(updated.getDescription() != null ? updated.getDescription() : existing.getDescription());
         existing.setActive(updated.isActive());
-        existing.setBuyProductId(updated.getBuyProductId());
-        existing.setBuyQuantity(updated.getBuyQuantity());
-        existing.setGetProductId(updated.getGetProductId());
-        existing.setGetQuantity(updated.getGetQuantity());
-        existing.setProductId(updated.getProductId());
-        existing.setMinimumCartValue(updated.getMinimumCartValue());
+        existing.setBuyProductId(updated.getBuyProductId() != null ? updated.getBuyProductId() : existing.getBuyProductId());
+        existing.setBuyQuantity(updated.getBuyQuantity() != null ? updated.getBuyQuantity() : existing.getBuyQuantity());
+        existing.setGetProductId(updated.getGetProductId() != null ? updated.getGetProductId() : existing.getGetProductId());
+        existing.setGetQuantity(updated.getGetQuantity() != null ? updated.getGetQuantity() : existing.getGetQuantity());
+        existing.setProductId(updated.getProductId() != null ? updated.getProductId() : existing.getProductId());
+        existing.setMinimumCartValue(updated.getMinimumCartValue() != null ? updated.getMinimumCartValue() : existing.getMinimumCartValue());
     }
+
 }

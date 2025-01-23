@@ -27,15 +27,21 @@ public class Coupon {
     private String description;
     private boolean active;
 
-    // For BXGY
-    private String buyProductId;
-    private Integer buyQuantity;
-    private String getProductId;
-    private Integer getQuantity;
+    // For BxGy
+    @Builder.Default
+    private String buyProductId = "";
+    @Builder.Default
+    private Integer buyQuantity = 0;
+    @Builder.Default
+    private String getProductId = "";
+    @Builder.Default
+    private Integer getQuantity = 0;
 
     // For Product-wise
-    private String productId;
+    @Builder.Default
+    private String productId = "";
 
     // For Cart-wise
-    private Double minimumCartValue;
+    @Builder.Default
+    private Double minimumCartValue = 0.0;
 }
