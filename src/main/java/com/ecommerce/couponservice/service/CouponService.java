@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,19 +56,24 @@ public class CouponService {
     }
 
     public List<AppliedCartDTO> getApplicableCoupons(CartDTO cart) {
-        List<AppliedCartDTO> applicableCoupons = new ArrayList<>();
-
-        for (Coupon coupon : couponRepository.findByActiveTrue()) {
-            CouponStrategy strategy = strategyMap.get(coupon.getType());
-            if (strategy.isApplicable(cart, coupon)) {
-                applicableCoupons.add(strategy.apply(cart, coupon));
-            }
-        }
-
-        return applicableCoupons;
+        return couponRepository.findByActiveTrue().stream()
+                .map(coupon -> {
+                    CouponStrategy strategy = strategyMap.get(coupon.getType());
+                    if (strategy.isApplicable(cart, coupon)) {
+                        double discount = strategy.apply(cart, coupon).getTotalDiscount();
+                        return AppliedCartDTO.builder()
+                                .couponId(coupon.getId())
+                                .type(coupon.getType().name().toLowerCase())
+                                .discount(discount)
+                                .build();
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
-    public AppliedCartDTO applyCoupon(Long couponId, CartDTO cart) {
+    public UpdatedCartDTO applyCoupon(Long couponId, CartDTO cart) {
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new CouponNotFoundException("Coupon not found"));
 
@@ -80,7 +86,27 @@ public class CouponService {
             throw new InvalidCouponException("Coupon conditions not met");
         }
 
-        return strategy.apply(cart, coupon);
+        AppliedCartDTO appliedCart = strategy.apply(cart, coupon);
+
+        List<UpdatedCartItemDTO> updatedItems = cart.getItems().stream()
+                .map(item -> UpdatedCartItemDTO.builder()
+                        .productId(item.getProductId())
+                        .quantity(item.getQuantity())
+                        .price(item.getPrice())
+                        .totalDiscount(
+                                appliedCart.getItemDiscounts().getOrDefault(item.getProductId(), 0.0))
+                        .build())
+                .collect(Collectors.toList());
+
+        double totalDiscount = appliedCart.getTotalDiscount();
+        double finalPrice = cart.getTotalAmount() - totalDiscount;
+
+        return UpdatedCartDTO.builder()
+                .items(updatedItems)
+                .totalPrice(cart.getTotalAmount())
+                .totalDiscount(totalDiscount)
+                .finalPrice(finalPrice)
+                .build();
     }
 
     private Coupon mapToEntity(CouponDTO dto) {

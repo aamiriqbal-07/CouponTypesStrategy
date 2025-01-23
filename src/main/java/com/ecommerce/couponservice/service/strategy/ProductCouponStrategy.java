@@ -31,11 +31,8 @@ public class ProductCouponStrategy implements CouponStrategy {
         }
 
         return AppliedCartDTO.builder()
-                .items(cart.getItems())
-                .originalTotal(cart.getTotalAmount())
-                .discountedTotal(cart.getTotalAmount() - totalDiscount)
-                .totalDiscount(totalDiscount)
                 .itemDiscounts(itemDiscounts)
+                .totalDiscount(totalDiscount)
                 .build();
     }
 }

@@ -48,7 +48,7 @@ public class CouponController {
     }
 
     @PostMapping("/apply-coupon/{id}")
-    public ResponseEntity<AppliedCartDTO> applyCoupon(@PathVariable Long id, @RequestBody CartDTO cart) {
+    public ResponseEntity<UpdatedCartDTO> applyCoupon(@PathVariable Long id, @RequestBody CartDTO cart) {
         return ResponseEntity.ok(couponService.applyCoupon(id, cart));
     }
 }
