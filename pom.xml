@@ -14,13 +14,7 @@
     <groupId>com.ecommerce</groupId>
     <artifactId>coupon-service</artifactId>
     <version>1.0.0</version>
-    <name>coupon-service</name>
-    <description>Coupon Service for E-commerce Platform</description>
-
-    <properties>
-        <java.version>17</java.version>
-        <lombok.version>1.18.30</lombok.version>
-    </properties>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!-- Spring Boot Starter for Web -->
